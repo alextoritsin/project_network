@@ -1,6 +1,8 @@
+import json
 from django.contrib.auth import authenticate, login, logout
+from django.views.decorators.csrf import ensure_csrf_cookie
 from django.db import IntegrityError
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse
 
@@ -12,7 +14,6 @@ def index(request):
         content = request.POST['post']
         Post.objects.create(author=request.user, content=content)
         return redirect('index')
-
     else:
         posts = Post.objects.all()
         return render(request, "network/index.html", {
@@ -71,6 +72,21 @@ def register(request):
     else:
         return render(request, "network/register.html")
 
+@ensure_csrf_cookie
 def likes_management(request, post_id):
-    
-    pass
+    # Query for requested post
+    try:
+        post = Post.objects.get(pk=post_id)
+    except Post.DoesNotExist:
+        return JsonResponse({"error": "Post not found"}, status=404)
+
+    if request.method == "PUT":
+        data = json.loads(request.body)
+        if data.get("liked"):
+            print("Like")
+            post.likes.add(request.user)  
+        else:
+            print("Dislike")
+            post.likes.remove(request.user)
+        post.save()
+        return JsonResponse(post.serialize())
