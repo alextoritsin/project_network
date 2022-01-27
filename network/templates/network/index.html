@@ -32,7 +32,7 @@
             </h6>     
         {% endif %}
     </div>
-    <hr>
+    <hr noshade width="100">
 
     <!-- All posts -->
     <div class="container posts">
@@ -50,11 +50,17 @@
                     </p>
                     <p class="content">{{ post.content }}</p>
                     <div class="likes">
-                        {% if post.likes %}
-                            <i id="{{ post.id }}" class="bi bi-heart-fill like"></i> <span>{{ post.likes.count }}</span>
-                        {% else %}
-                            <i id="{{ post.id }}" class="bi bi-heart like"></i>
-                        {% endif %}
+                            {% if user in post.likes.all %}
+                                <i id="{{ post.id }}" class="bi bi-heart-fill like"></i>
+                            {% else %}
+                                <i id="{{ post.id }}" class="bi bi-heart like"></i>
+                            {% endif %}
+    
+                            <span class="count">
+                                {% if post.likes.count > 0 %}
+                                    {{ post.likes.count }}
+                                {% endif %}
+                            </span>
                     </div>
                 </div>
             </div>
