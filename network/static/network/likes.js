@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-    // add query selectors to all like icons
+    // add event listeners to all like icons
     document.querySelectorAll('i').forEach(e => {
         e.addEventListener('click', () => changeLikes(e));
     })
@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // get CSRF token cookie
 // https://docs.djangoproject.com/en/4.0/ref/csrf/#acquiring-the-token-if-csrf-use-sessions-and-csrf-cookie-httponly-are-false
+
 function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {

@@ -1,9 +1,11 @@
+from asyncio import ensure_future
 import json
+from tkinter import getboolean
 from django.contrib.auth import authenticate, login, logout
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.db import IntegrityError
-from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
-from django.shortcuts import redirect, render
+from django.http import Http404, HttpResponse, HttpResponseRedirect, JsonResponse
+from django.shortcuts import get_list_or_404, redirect, render, get_object_or_404
 from django.urls import reverse
 
 from .models import User, Post
@@ -72,6 +74,7 @@ def register(request):
     else:
         return render(request, "network/register.html")
 
+
 @ensure_csrf_cookie
 def likes_management(request, post_id):
     # Query for requested post
@@ -83,10 +86,23 @@ def likes_management(request, post_id):
     if request.method == "PUT":
         data = json.loads(request.body)
         if data.get("liked"):
-            print("Like")
             post.likes.add(request.user)  
         else:
-            print("Dislike")
             post.likes.remove(request.user)
         post.save()
         return JsonResponse(post.serialize())
+
+# @ensure_csrf_cookie
+# def follow_management(request, adsf):
+#     pass
+
+
+def profile(request, user_id):
+    try:
+        profile = User.objects.get(pk=user_id)
+    except User.DoesNotExist:
+        raise Http404("This user does not exist")
+    
+    return render(request, 'network/profile.html', {
+        'profile': profile,
+    })

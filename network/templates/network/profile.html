@@ -3,44 +3,28 @@
 {% load static %}
 
 {% block body %}
-    
-    <!--  Create post -->
-    <div class="container commentblock">
-        
-        
-        <!-- Post input -->
-        {% if user.is_authenticated %}
-            <div class="row mt-2">
-                <div class="col-auto">
-                    <img class="avatar my-1" src="{% static 'network/avatar.png' %}" alt="avatar"
-                    height="80px" width="80px"> 
-                </div>
-                <div class="col">
-                    <form action="{% url 'index' %}" method="post" class="ms-2">
-                        {% csrf_token %}
-                        <textarea rows="3" name="post" class="comment-input form-control mb-2 mt-1" placeholder="What's happening?" required></textarea>
-                        <div class="d-flex justify-content-end">
-                            <button class="btn btn-outline-primary btn-sm mb-2" type="submit">Post</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        {% else %}
-            <h6 class="pb-3">
-                Please, <a href="{% url 'login' %}">Log in</a>  to post comments. 
-                Don't have an account? <a href="{% url 'register' %}">Register here.</a>
-            </h6>     
+    <!-- Profile info -->
+    <div class="container mt-3 mb-5 posts profile">
+        <img class="avatar mt-1" src="{% static 'network/avatar.png' %}" alt="profile_photo" height="120px" width="120px">
+        {% if user.is_authenticated and user != profile %}
+            {% if profile in user.following.all %}
+                <button class="btn btn-outline-warning btn-sm follow" id="{{ profile.id }}">Unfollow</button>
+            {% else %}
+                <button class="btn btn-outline-primary btn-sm follow" id="{{ profile.id }}">Follow</button>
+            {% endif %}
         {% endif %}
+        <div class="name mt-1"><b>{{ profile.username }}</b></div>
+        <div><i class="bi bi-calendar-check me-2"></i><span>Joined December 2021</span></div>
+        <div><span class="me-3">{{ profile.followers.all|length }} Followers</span><span>{{ profile.following.all|length }} Following</span></div>
     </div>
-    <hr>
-
+    
     <!-- All posts -->
     <div class="container posts">
-        {% for post in posts %}
+        {% for post in profile.posts.all %}
             <div class="row my-3 post">
                 <div class="col-auto">
                     <img class="avatar my-1" src="{% static 'network/avatar.png' %}" alt="avatar"
-                    height="80px" width="80px">
+                    height="70px" width="70px">
                 </div>
 
                 <div class="col">
@@ -65,8 +49,8 @@
                 </div>
             </div>
         {% empty %}
-            <div class="my-2 noposts">
-                No posts yet
+            <div class="my-4 noposts">
+                <h4>No posts yet</h4>
             </div>
         {% endfor %}
     </div>
@@ -74,4 +58,5 @@
 
 {% block script %}
     <script src="{% static 'network/likes.js' %}"></script>
+    <script src="{% static 'network/follow.js' %}"></script>
 {% endblock %}

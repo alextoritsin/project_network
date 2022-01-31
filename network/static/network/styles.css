@@ -129,7 +129,7 @@ hr {
 }
 
 .post {
-    border: 1px solid rgba(0, 0, 0, 0.233);
+    border: 1px solid rgba(0, 0, 0, 0.103);
 }
 
 div.likes {
@@ -138,12 +138,37 @@ div.likes {
 
 .like {
     color: red;
+    /* border: 1px solid white; */
+    /* border-radius: 30px; */
 }
 
 .like:hover {
     cursor: pointer;
+    /* border: 1px solid red; */
 }
 
 .form-group {
     margin-bottom: 1rem;
+}
+
+a, a:hover {
+    text-decoration: none;
+}
+
+div.noposts {
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
+/* delete later */
+div.profile {
+    border: 1px solid rgba(0, 0, 0, 0.096);
+}
+
+button.btn-sm {
+    border-radius: 15px;
+    float: right;
+    width: 6rem;
+    margin-top: 10px;
 }
