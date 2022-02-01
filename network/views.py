@@ -1,11 +1,9 @@
-from asyncio import ensure_future
 import json
-from tkinter import getboolean
 from django.contrib.auth import authenticate, login, logout
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.db import IntegrityError
 from django.http import Http404, HttpResponse, HttpResponseRedirect, JsonResponse
-from django.shortcuts import get_list_or_404, redirect, render, get_object_or_404
+from django.shortcuts import redirect, render, get_object_or_404
 from django.urls import reverse
 
 from .models import User, Post
@@ -92,9 +90,36 @@ def likes_management(request, post_id):
         post.save()
         return JsonResponse(post.serialize())
 
-# @ensure_csrf_cookie
-# def follow_management(request, adsf):
-#     pass
+
+def follow_management(request, user_id):
+    # get sub user
+    follower = request.user
+
+    # get user been followed
+    try:
+        profile = User.objects.get(pk=user_id)
+    except User.DoesNotExist:
+        raise Http404("This user does not exist")
+
+    if request.method == "PUT":
+        # parse json data
+        data = json.loads(request.body)
+
+        # unfollowing case
+        if data.get("followed"):
+            print("Unfollowed")
+            profile.followers.remove(follower)
+            follower.following.remove(profile)
+        else:
+            # following case
+            print('Followed')
+            profile.followers.add(follower)
+            follower.following.add(profile)
+            
+        profile.save()
+        follower.save()
+        # send modified profile object
+        return JsonResponse(profile.serialize())
 
 
 def profile(request, user_id):

@@ -11,6 +11,6 @@ urlpatterns = [
     path("profile/<int:user_id>", views.profile, name="profile"),
 
     # API routes
+    re_path(r".*following/(?P<user_id>[0-9]*)", views.follow_management, name="follow"),
     re_path(r".*likes/(?P<post_id>[0-9]*)", views.likes_management, name='likes'),
-    # path("likes/<int:post_id>", views.likes_management, name='likes'),
 ]

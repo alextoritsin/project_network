@@ -1,7 +1,5 @@
-from operator import mod
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-from matplotlib.style import use
 
 
 class User(AbstractUser):
@@ -9,7 +7,14 @@ class User(AbstractUser):
     followers = models.ManyToManyField('self', symmetrical=False, related_name='subs')
 
     def __str__(self) -> str:
-        return self.username    
+        return self.username   
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "following": [user.username for user in self.following.all()],
+            "followers": [user.username for user in self.followers.all()],
+        }
 
 class Post(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="posts")

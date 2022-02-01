@@ -8,14 +8,17 @@
         <img class="avatar mt-1" src="{% static 'network/avatar.png' %}" alt="profile_photo" height="120px" width="120px">
         {% if user.is_authenticated and user != profile %}
             {% if profile in user.following.all %}
-                <button class="btn btn-outline-warning btn-sm follow" id="{{ profile.id }}">Unfollow</button>
+                <button class="btn btn-outline-danger btn-sm follow" id="{{ profile.id }}">Unfollow</button>
             {% else %}
                 <button class="btn btn-outline-primary btn-sm follow" id="{{ profile.id }}">Follow</button>
             {% endif %}
         {% endif %}
-        <div class="name mt-1"><b>{{ profile.username }}</b></div>
+        <div class="name my-1"><b>{{ profile.username }}</b></div>
         <div><i class="bi bi-calendar-check me-2"></i><span>Joined December 2021</span></div>
-        <div><span class="me-3">{{ profile.followers.all|length }} Followers</span><span>{{ profile.following.all|length }} Following</span></div>
+        <div class="my-1">
+            <span class="me-3"><b class="subs">{{ profile.followers.all|length }}</b> Followers</span>
+            <span><b>{{ profile.following.all|length }}</b> Following</span>
+        </div>
     </div>
     
     <!-- All posts -->
@@ -34,17 +37,17 @@
                     </p>
                     <p class="content">{{ post.content }}</p>
                     <div class="likes">
-                            {% if user in post.likes.all %}
-                                <i id="{{ post.id }}" class="bi bi-heart-fill like"></i>
-                            {% else %}
-                                <i id="{{ post.id }}" class="bi bi-heart like"></i>
+                        {% if user in post.likes.all %}
+                            <i id="{{ post.id }}" class="bi bi-heart-fill like"></i>
+                        {% else %}
+                            <i id="{{ post.id }}" class="bi bi-heart like"></i>
+                        {% endif %}
+
+                        <span class="count">
+                            {% if post.likes.count > 0 %}
+                                {{ post.likes.count }}
                             {% endif %}
-    
-                            <span class="count">
-                                {% if post.likes.count > 0 %}
-                                    {{ post.likes.count }}
-                                {% endif %}
-                            </span>
+                        </span>
                     </div>
                 </div>
             </div>
@@ -58,5 +61,4 @@
 
 {% block script %}
     <script src="{% static 'network/likes.js' %}"></script>
-    <script src="{% static 'network/follow.js' %}"></script>
 {% endblock %}

@@ -5,6 +5,11 @@ document.addEventListener('DOMContentLoaded', () => {
         e.addEventListener('click', () => changeLikes(e));
     })
 
+    const button = document.querySelector('button.follow')
+    if (button) {
+        button.addEventListener('click', event => manageFollow(event.currentTarget));
+    }
+    
 });
 
 // get CSRF token cookie
@@ -60,3 +65,38 @@ function changeLikes(element) {
             
         })
 }
+
+
+function manageFollow(element) {
+    // check button
+    const is_followed = element.classList.contains('btn-outline-danger')
+    
+    // get subs element
+    let subs = document.querySelector('b.subs')
+    console.log(subs.innerHTML);
+
+    // get csrf token
+    const token = getCookie('csrftoken');
+    
+    fetch(`following/${element.id}`, {
+        method: 'PUT',
+        headers: {'X-CSRFToken': token},
+        body: JSON.stringify({
+            followed: is_followed
+        })
+    })
+        .then(response => response.json())
+        .then(user => {
+            console.log(user.followers);
+            if (is_followed) {
+                element.classList.replace('btn-outline-danger', 'btn-outline-primary');
+                element.innerHTML = 'Follow';
+            } else {
+                element.classList.replace('btn-outline-primary', 'btn-outline-danger');
+                element.innerHTML = 'Unfollow';
+            }
+            subs.innerHTML = user.followers.length;
+        })
+}
+
+// export default getCookie;
