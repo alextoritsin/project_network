@@ -21,6 +21,7 @@ class Post(models.Model):
     content = models.TextField()
     likes = models.ManyToManyField(User)
     timestamp = models.DateTimeField(auto_now_add=True)
+    updated = models.BooleanField(default=False)
 
     def __str__(self) -> str:
         return f"#{self.id} from {self.author}"

@@ -1,0 +1,74 @@
+{% load static %}
+
+<!-- All posts -->
+<div class="container posts">
+    {% for post in posts %}
+        <div class="row my-3 post">
+            <!-- Avatar image -->
+            <div class="col-auto">
+                <img class="avatar my-1" src="{% static 'network/avatar.png' %}" alt="avatar"
+                height="70px" width="70px">
+            </div>
+            
+            
+
+            <!-- Post content -->
+            <div class="col" data-content="{{ post.id }}">
+
+                <!-- Block with author and datetime info -->
+                <div class="mb-1">
+                    <strong><a href="{% url 'profile' post.author.id %}">{{ post.author }}</a></strong>
+                    <span class="text-muted fw-lighter ms-2">{{ post.timestamp|date:"M j, Y, g:i A" }}</span>
+                    <span class="text-muted fw-lighter">
+                        {% if post.updated %}
+                            (edited)
+                        {% endif %}
+                    </span>
+                </div>
+
+                <!-- Block initially hidden -->
+                <div class="textarea">
+                    <form>
+                        {% csrf_token %}
+                        <textarea rows="3" name="post" class="comment-input form-control mt-1" required autofocus>{{ post.content }}</textarea>
+                        <div class="d-flex justify-content-end">
+                            <button class="btn btn-outline-primary btn-sm mb-2" type="submit">Save</button>
+                        </div>
+                    </form>
+                </div>
+                <!-- End hidden block -->
+
+
+                <!-- Block initially shown -->
+                <div>
+                    <p class="content">{{ post.content }}</p>
+                    <div class="likes">
+                        {% if user in post.likes.all %}
+                            <i id="{{ post.id }}" class="bi bi-heart-fill like"></i>
+                        {% else %}
+                            <i id="{{ post.id }}" class="bi bi-heart like"></i>
+                        {% endif %}
+    
+                        <span class="count">
+                            {% if post.likes.count > 0 %}
+                                {{ post.likes.count }}
+                            {% endif %}
+                        </span>
+                    </div>
+                    
+                    {% if user == post.author %}
+                        <div class="edit">
+                            Edit Post
+                        </div>
+                    {% endif %}
+                </div>
+                <!-- End shown block -->
+
+            </div>
+        </div>
+    {% empty %}
+        <div class="my-4 noposts">
+            <h4>No posts yet</h4>
+        </div>
+    {% endfor %}
+</div>

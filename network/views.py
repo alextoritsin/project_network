@@ -1,10 +1,12 @@
 import json
+from django.utils import timezone
 from django.contrib.auth import authenticate, login, logout
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.db import IntegrityError
 from django.http import Http404, HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import redirect, render, get_object_or_404
 from django.urls import reverse
+from django.core.paginator import Paginator
 
 from .models import User, Post
 
@@ -16,8 +18,12 @@ def index(request):
         return redirect('index')
     else:
         posts = Post.objects.all()
+        paginator = Paginator(posts, 3)
+        page_number = request.Get.get('page')
+        page_obj = paginator.get_page(page_number)
+
         return render(request, "network/index.html", {
-            "posts": posts,
+            "page_obj": page_obj,
         })
 
 
@@ -131,3 +137,27 @@ def profile(request, user_id):
     return render(request, 'network/profile.html', {
         'profile': profile,
     })
+
+
+def following(request):
+    # get all following users
+    users = request.user.following.all()
+
+    return render(request, 'network/index.html', {
+        "posts": Post.objects.filter(author__in=users).all(),
+    })
+
+
+def edit_post(request, post_id):
+    if request.method == 'PUT':
+        now = timezone.localtime()
+        data = json.loads(request.body)
+        Post.objects.filter(pk=post_id).update(
+                content=data.get('content'),
+                updated=True,
+                timestamp=now,
+        )
+
+        return JsonResponse({
+            "timestamp": now.strftime("%b %#d, %Y, %#I:%M %p"),
+        })

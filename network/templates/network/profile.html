@@ -21,42 +21,8 @@
         </div>
     </div>
     
-    <!-- All posts -->
-    <div class="container posts">
-        {% for post in profile.posts.all %}
-            <div class="row my-3 post">
-                <div class="col-auto">
-                    <img class="avatar my-1" src="{% static 'network/avatar.png' %}" alt="avatar"
-                    height="70px" width="70px">
-                </div>
-
-                <div class="col">
-                    <p class="mb-1">
-                        <strong><a href="{% url 'profile' post.author.id %}">{{ post.author }}</a></strong>
-                        <span class="text-muted fw-lighter"> at {{ post.timestamp|date:"M j, Y, P" }}</span>
-                    </p>
-                    <p class="content">{{ post.content }}</p>
-                    <div class="likes">
-                        {% if user in post.likes.all %}
-                            <i id="{{ post.id }}" class="bi bi-heart-fill like"></i>
-                        {% else %}
-                            <i id="{{ post.id }}" class="bi bi-heart like"></i>
-                        {% endif %}
-
-                        <span class="count">
-                            {% if post.likes.count > 0 %}
-                                {{ post.likes.count }}
-                            {% endif %}
-                        </span>
-                    </div>
-                </div>
-            </div>
-        {% empty %}
-            <div class="my-4 noposts">
-                <h4>No posts yet</h4>
-            </div>
-        {% endfor %}
-    </div>
+    {% include "network/posts.html" with posts=profile.posts.all %}
+    
 {% endblock %}
 
 {% block script %}

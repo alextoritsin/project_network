@@ -5,10 +5,16 @@ document.addEventListener('DOMContentLoaded', () => {
         e.addEventListener('click', () => changeLikes(e));
     })
 
+    // managing followers
     const button = document.querySelector('button.follow')
     if (button) {
         button.addEventListener('click', event => manageFollow(event.currentTarget));
     }
+
+    // post content editing
+    document.querySelectorAll('div.edit').forEach(e => {
+        e.addEventListener('click', () => postEditing(e.parentNode));
+    })
     
 });
 
@@ -38,7 +44,7 @@ function changeLikes(element) {
     const is_liked = element.className == 'bi bi-heart like' ? true : false;
     
     // get csrftoken
-    const csrftoken = getCookie('csrftoken');
+    let csrftoken = getCookie('csrftoken');
     
     // send AJAX to change likes count
     fetch(`likes/${element.id}`, {
@@ -73,21 +79,19 @@ function manageFollow(element) {
     
     // get subs element
     let subs = document.querySelector('b.subs')
-    console.log(subs.innerHTML);
 
     // get csrf token
-    const token = getCookie('csrftoken');
+    let csrftoken = getCookie('csrftoken');
     
-    fetch(`following/${element.id}`, {
+    fetch(`follow/${element.id}`, {
         method: 'PUT',
-        headers: {'X-CSRFToken': token},
+        headers: {'X-CSRFToken': csrftoken},
         body: JSON.stringify({
             followed: is_followed
         })
     })
         .then(response => response.json())
         .then(user => {
-            console.log(user.followers);
             if (is_followed) {
                 element.classList.replace('btn-outline-danger', 'btn-outline-primary');
                 element.innerHTML = 'Follow';
@@ -99,4 +103,54 @@ function manageFollow(element) {
         })
 }
 
-// export default getCookie;
+function postEditing(element) {
+    let post = element.parentElement;
+    const currentText = element.children[0].innerHTML;
+    element.style.display = 'none';
+
+    // get div header and text area
+    const header = post.children[0];
+    const div_textarea = post.children[1];
+
+    div_textarea.style.display = 'block';
+    const form = div_textarea.children[0];
+    form.addEventListener('submit', event => {
+        
+        let content = form.elements['post'].value;
+        if (currentText == content) {
+
+            // if text not changed
+            element.style.display = 'block';
+            div_textarea.style.display = 'none';
+        } else {
+
+            // text was changed
+            let csrftoken = getCookie('csrftoken');
+    
+            fetch(`edit_post/${post.dataset.content}`, {
+                method: "PUT",
+                headers: {'X-CSRFToken': csrftoken},
+                body: JSON.stringify({
+                    content: content,
+                })
+            })
+                .then(responce => responce.json())
+                .then(data => {
+                    header.children[1].innerText = data.timestamp;
+                    header.lastElementChild.innerText = '(edited)';
+                    element.children[0].innerHTML = content;
+                    element.style.display = 'block';
+                    div_textarea.style.display = 'none';
+                })
+
+        }
+
+
+
+            
+        // console.log(form.elements['post'].value);
+        // console.log(csrftoken);
+        
+        event.preventDefault();
+    });
+}
