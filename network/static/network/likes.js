@@ -104,6 +104,8 @@ function manageFollow(element) {
 }
 
 function postEditing(element) {
+    
+    // get post that will be edited
     let post = element.parentElement;
     const currentText = element.children[0].innerHTML;
     element.style.display = 'none';
@@ -111,9 +113,17 @@ function postEditing(element) {
     // get div header and text area
     const header = post.children[0];
     const div_textarea = post.children[1];
-
     div_textarea.style.display = 'block';
     const form = div_textarea.children[0];
+    
+    // cancel button function
+    let btn_csl = document.querySelector(`button[data-cancel="${post.dataset.content}"]`)
+    btn_csl.onclick = () => {
+        div_textarea.style.display = 'none';
+        element.style.display = 'block';
+    }
+
+    // submit button function
     form.addEventListener('submit', event => {
         
         let content = form.elements['post'].value;
@@ -144,13 +154,6 @@ function postEditing(element) {
                 })
 
         }
-
-
-
-            
-        // console.log(form.elements['post'].value);
-        // console.log(csrftoken);
-        
         event.preventDefault();
     });
 }

@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.db import IntegrityError
 from django.http import Http404, HttpResponse, HttpResponseRedirect, JsonResponse
-from django.shortcuts import redirect, render, get_object_or_404
+from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.core.paginator import Paginator
 
@@ -18,13 +18,15 @@ def index(request):
         return redirect('index')
     else:
         posts = Post.objects.all()
-        paginator = Paginator(posts, 3)
-        page_number = request.Get.get('page')
+        paginator = Paginator(posts, 10)
+
+        page_number = request.GET.get('page')
         page_obj = paginator.get_page(page_number)
 
-        return render(request, "network/index.html", {
+        return render(request, 'network/index.html', {
             "page_obj": page_obj,
         })
+        
 
 
 def login_view(request):
@@ -113,12 +115,10 @@ def follow_management(request, user_id):
 
         # unfollowing case
         if data.get("followed"):
-            print("Unfollowed")
             profile.followers.remove(follower)
             follower.following.remove(profile)
         else:
             # following case
-            print('Followed')
             profile.followers.add(follower)
             follower.following.add(profile)
             
@@ -133,18 +133,31 @@ def profile(request, user_id):
         profile = User.objects.get(pk=user_id)
     except User.DoesNotExist:
         raise Http404("This user does not exist")
+
+    posts = profile.posts.all()
+    paginator = Paginator(posts, 10)
+
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    
     
     return render(request, 'network/profile.html', {
         'profile': profile,
+        'page_obj': page_obj,
     })
 
 
 def following(request):
     # get all following users
     users = request.user.following.all()
+    posts = Post.objects.filter(author__in=users).all()
+    paginator = Paginator(posts, 10)
 
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    
     return render(request, 'network/index.html', {
-        "posts": Post.objects.filter(author__in=users).all(),
+        "page_obj": page_obj,
     })
 
 
@@ -157,7 +170,7 @@ def edit_post(request, post_id):
                 updated=True,
                 timestamp=now,
         )
-
         return JsonResponse({
             "timestamp": now.strftime("%b %#d, %Y, %#I:%M %p"),
         })
+
