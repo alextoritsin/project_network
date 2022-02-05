@@ -2,106 +2,13 @@ body {
     padding: 10px;
 }
 
-/* form.listing {
-    margin-left: 1rem;
+
+.postsblock {
     width: 60%;
-}
-
-div.param {
-    width: 70%;
-}
-
-ul.errorlist {
-    width: max-content;
-    font-size: small;
-    color: red;
-    list-style-type: none;
-    padding: 0;
-    padding-left: 5px;
-    margin: 0;
-}
-
-div.bid {
-    width: 15%;
-}
-
-div#lst {
-    border: 1px solid rgba(0, 0, 0, 0.041);
-    border-radius: 4px;
-}
-
-div#lst:hover {
-    box-shadow: 1px 1px 3px 2px rgba(0, 0, 0, 0.137);
-    background-color: rgb(245, 244, 244);
-}
-
-a, a:hover {
-    text-decoration: none;
-}
-
-i {
-    font-size: 2rem;
-}
-
-form#icon {
-    display: inline;
-}
-
-div.desc {
-    width: 90%;
-    font-size: x-large;
-}
-
-button.close {
-    border-radius: 15px;
-}
-
-
-
-
-.border {
-    border: 1px solid rgba(0, 0, 0, 0.658);
-}
-
-
-div.category {
-    display: inline;
-    border: 1px solid rgba(0, 0, 0, 0.342);
-    font-size: x-large;
-    padding: 0px 10px 3px 10px;
-    border-radius: 16px;
-    background-color: rgba(148, 190, 253, 0.493);
-    
-}
-
-div.category:hover {
-    background-color: rgba(125, 177, 255, 0.493);
-}
-
-h2 {
-    margin-left: 1rem;
-}
-
-img.listing {
-    max-width: 500px;
-    max-height: auto;
-}
- */
-
-
-
-/* .header {
-    background-color: rgba(148, 189, 236, 0.808);
-    color:rgb(34, 49, 49);
-    height: 40px;
-    font-size: large;
-} */
-
-.commentblock {
-    width: 60%;
-    background-color: rgba(140, 190, 255, 0.295);
+    background-color: rgba(140, 190, 255, 0.151);
     border: 1px solid rgba(0, 0, 0, 0.137);
     margin-top: 20px;
+    text-align: center;
 
 }
 .comment-input {
@@ -116,11 +23,9 @@ img.avatar {
 
 div.container {
     height: 50%;
-}
-
-div.posts {
     width: 60%;
 }
+
 
 hr {
     width: 60%;
@@ -140,8 +45,6 @@ div.likes {
 
 .like {
     color: red;
-    /* border: 1px solid white; */
-    /* border-radius: 30px; */
     cursor: pointer;
 }
 
@@ -161,11 +64,6 @@ div.noposts {
     text-align: center;
 }
 
-/* delete later */
-div.profile {
-    border: 1px solid rgba(0, 0, 0, 0.096);
-}
-
 button.btn-sm {
     border-radius: 15px;
     float: right;
@@ -174,7 +72,6 @@ button.btn-sm {
 }
 
 div.edit {
-    /* border: 1px solid black; */
     float: right;
     color: rgba(0, 0, 0, 0.411);
     cursor: pointer;
@@ -191,5 +88,14 @@ div.textarea {
 }
 
 .border {
-    border: 1px solid rgba(0, 0, 0, 0.445);
+    border: 1px solid rgba(0, 0, 0, 0.637);
+}
+
+div.notlogged {
+    text-align: center;
+    padding: 10px;
+}
+
+p.content {
+    white-space: pre-wrap;
 }

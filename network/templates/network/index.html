@@ -5,7 +5,7 @@
 {% block body %}
     
     <!--  Create post -->
-    <div class="container commentblock">
+    <div class="container postsblock">
         
         
         <!-- Post input -->
@@ -25,19 +25,23 @@
                     </form>
                 </div>
             </div>
+            
         {% else %}
-            <h6 class="pb-3">
-                Please, <a href="{% url 'login' %}">Log in</a>  to post comments. 
+            <div class="pb-3 notlogged">
+                Please, <a href="{% url 'login' %}">Log in</a>  to post. 
                 Don't have an account? <a href="{% url 'register' %}">Register here.</a>
-            </h6>     
+            </div>     
         {% endif %}
     </div>
-    <hr>
 
     {% include "network/posts.html" %}
+    
+    {% if not page_obj %}
+        No Posts Yet
+    {% endif %}
 
 {% endblock %}
 
 {% block script %}
-    <script src="{% static 'network/likes.js' %}"></script>
+    <script src="{% static 'network/network.js' %}"></script>
 {% endblock %}

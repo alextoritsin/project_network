@@ -1,5 +1,6 @@
 {% load static %}
 <!-- All posts -->
+<hr>
 <div class="container posts">
     {% for post in page_obj %}
         <div class="row my-3 post">
@@ -65,10 +66,7 @@
 
             </div>
         </div>
-    {% empty %}
-        <div class="my-4 noposts">
-            <h4>No posts yet</h4>
-        </div>
+    
     {% endfor %}
 </div>
 

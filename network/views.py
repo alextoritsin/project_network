@@ -98,7 +98,7 @@ def likes_management(request, post_id):
         post.save()
         return JsonResponse(post.serialize())
 
-
+@ensure_csrf_cookie
 def follow_management(request, user_id):
     # get sub user
     follower = request.user
@@ -110,7 +110,6 @@ def follow_management(request, user_id):
         raise Http404("This user does not exist")
 
     if request.method == "PUT":
-        # parse json data
         data = json.loads(request.body)
 
         # unfollowing case

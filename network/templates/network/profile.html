@@ -4,7 +4,7 @@
 
 {% block body %}
     <!-- Profile info -->
-    <div class="container mt-3 mb-5 posts profile">
+    <div class="container mt-3 mb-5 border">
         <img class="avatar mt-1" src="{% static 'network/avatar.png' %}" alt="profile_photo" height="120px" width="120px">
         {% if user.is_authenticated and user != profile %}
             {% if profile in user.following.all %}
@@ -14,7 +14,7 @@
             {% endif %}
         {% endif %}
         <div class="name my-1"><b>{{ profile.username }}</b></div>
-        <div><i class="bi bi-calendar-check me-2"></i><span>Joined December 2021</span></div>
+        <div><i class="bi bi-calendar-check me-2"></i><span>Joined {{ profile.joined|date:"F Y" }}</span></div>
         <div class="my-1">
             <span class="me-3"><b class="subs">{{ profile.followers.all|length }}</b> Followers</span>
             <span><b>{{ profile.following.all|length }}</b> Following</span>
@@ -26,5 +26,5 @@
 {% endblock %}
 
 {% block script %}
-    <script src="{% static 'network/likes.js' %}"></script>
+    <script src="{% static 'network/network.js' %}"></script>
 {% endblock %}
