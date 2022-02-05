@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.db import IntegrityError
 from django.http import Http404, HttpResponse, HttpResponseRedirect, JsonResponse
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.core.paginator import Paginator
 
@@ -83,6 +83,7 @@ def register(request):
 
 @ensure_csrf_cookie
 def likes_management(request, post_id):
+
     # Query for requested post
     try:
         post = Post.objects.get(pk=post_id)
@@ -97,6 +98,7 @@ def likes_management(request, post_id):
             post.likes.remove(request.user)
         post.save()
         return JsonResponse(post.serialize())
+
 
 @ensure_csrf_cookie
 def follow_management(request, user_id):
@@ -162,14 +164,20 @@ def following(request):
 
 def edit_post(request, post_id):
     if request.method == 'PUT':
-        now = timezone.localtime()
-        data = json.loads(request.body)
-        Post.objects.filter(pk=post_id).update(
-                content=data.get('content'),
-                updated=True,
-                timestamp=now,
-        )
-        return JsonResponse({
-            "timestamp": now.strftime("%b %#d, %Y, %#I:%M %p"),
-        })
+        post = get_object_or_404(Post, pk=post_id)
+        if post.author != request.user:
+            return JsonResponse({
+                "error": "You're not allowed to edit another user's post"
+            })
+        else:
+            now = timezone.localtime()
+            data = json.loads(request.body)
+            Post.objects.filter(pk=post_id).update(
+                    content=data.get('content'),
+                    updated=True,
+                    timestamp=now,
+            )
+            return JsonResponse({
+                "timestamp": now.strftime("%b %#d, %Y, %#I:%M %p"),
+            })
 

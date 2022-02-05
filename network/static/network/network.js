@@ -15,7 +15,6 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('div.edit').forEach(e => {
         e.addEventListener('click', () => postEditing(e.parentNode));
     })
-    
 });
 
 // get CSRF token cookie
@@ -68,7 +67,6 @@ function changeLikes(element) {
                 element.classList.replace("bi-heart-fill", "bi-heart");
                 element.nextElementSibling.innerHTML = likes > 0 ? likes : '';
             }
-            
         })
 }
 
@@ -107,7 +105,7 @@ function postEditing(element) {
     
     // get post that will be edited
     let post = element.parentElement;
-    const currentText = element.children[0].innerHTML;
+    let currentText = element.children[0].innerText;
     element.style.display = 'none';
 
     // get div header and text area
@@ -127,7 +125,7 @@ function postEditing(element) {
     form.addEventListener('submit', event => {
         
         let content = form.elements['post'].value;
-        if (currentText == content) {
+        if (currentText == content.trim()) {
 
             // if text not changed
             element.style.display = 'block';
@@ -152,7 +150,6 @@ function postEditing(element) {
                     element.style.display = 'block';
                     div_textarea.style.display = 'none';
                 })
-
         }
         event.preventDefault();
     });

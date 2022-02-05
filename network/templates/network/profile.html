@@ -4,7 +4,7 @@
 
 {% block body %}
     <!-- Profile info -->
-    <div class="container mt-3 mb-5 border">
+    <div class="container mt-3 mb-2 border">
         <img class="avatar mt-1" src="{% static 'network/avatar.png' %}" alt="profile_photo" height="120px" width="120px">
         {% if user.is_authenticated and user != profile %}
             {% if profile in user.following.all %}
